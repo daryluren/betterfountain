@@ -378,14 +378,49 @@ var fontTokenExisted: boolean = false;
 const decortypesDialogue = vscode.window.createTextEditorDecorationType({
 });
 
+var parserPromiseCount: number = 0;
+var latestStart: number = 0;
+var latestParseTimeout: NodeJS.Timer ;
+var parseDocCallCount: number = 0;
+var actualParsingDone: number = 0;
+
 export function parseDocument(document: TextDocument) {
-	console.time("parsing");
+	console.time("parseDocument");
 	clearDecorations();
 
-	var previewsToUpdate = getPreviewsToUpdate(document.uri)
-	var output = afterparser.parse(document.getText(), getFountainConfig(document.uri), previewsToUpdate.length>0)
+	parseDocCallCount++;
 
-	
+	var myStart = Date.now();
+	latestStart = myStart;
+
+	clearTimeout(latestParseTimeout);
+
+	latestParseTimeout = setTimeout(() => {	
+		var t = parserPromiseCount++;
+		
+
+	console.time("promise" + t.toString());
+
+	var previewsToUpdate = getPreviewsToUpdate(document.uri)
+	//var output: afterparser.parseoutput = null;
+
+	if (myStart != latestStart)
+	{
+		console.log("........then cancelled 1");
+		return;
+	}
+
+	var output = afterparser.parse(document.getText(), getFountainConfig(document.uri), previewsToUpdate.length>0)
+	actualParsingDone++;
+	console.log("keystrokes " + parseDocCallCount.toString() + " parsings " + actualParsingDone.toString())
+
+
+	if (myStart != latestStart)
+	{
+		console.log("........then cancelled 2");
+		return;
+	}
+
 	if (previewsToUpdate) {
 		//lastFountainDocument = document;
 		for (let i = 0; i < previewsToUpdate.length; i++) {
@@ -431,7 +466,10 @@ export function parseDocument(document: TextDocument) {
 		outlineViewProvider.update();
 	updateStatus(output.lengthAction, output.lengthDialogue);
 	showDecorations(document.uri);
-	console.timeEnd("parsing");
+	
+	console.timeEnd("promise" + t.toString());
+	}, 10);
+	console.timeEnd("parseDocument");
 }
 
 vscode.window.onDidChangeActiveTextEditor(change => {

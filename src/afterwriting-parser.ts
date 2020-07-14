@@ -116,6 +116,8 @@ export interface parseoutput {
     properties: screenplayProperties
 }
 export var parse = function (original_script: string, cfg: any, generate_html: boolean): parseoutput {
+    for (var wait = 0 ; wait < 999999999; wait++){}
+
     var lastFountainEditor: vscode.Uri;
     var config = getFountainConfig(lastFountainEditor);
     var script = original_script,
