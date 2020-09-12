@@ -57,7 +57,7 @@ export class FountainCommandTreeDataProvider implements vscode.TreeDataProvider<
 import { FountainFoldingRangeProvider } from "./providers/Folding";
 import { FountainCompletionProvider } from "./providers/Completion";
 import { FountainSymbolProvider } from "./providers/Symbols";
-import { showDecorations, clearDecorations } from "./providers/Decorations";
+import { ShowDecorations, ClearDecorations } from "./providers/Decorations";
 
 import { createPreviewPanel, previews, FountainPreviewSerializer, getPreviewsToUpdate } from "./providers/Preview";
 import { FountainOutlineTreeDataProvider } from "./providers/Outline";
@@ -297,7 +297,7 @@ let parseTelemetryFrequency = 5;
 export function parseDocument(document: TextDocument) {
 	let t0 = performance.now()
 
-	clearDecorations();
+	ClearDecorations();
 
 	var previewsToUpdate = getPreviewsToUpdate(document.uri)
 	var output = afterparser.parse(document.getText(), getFountainConfig(document.uri), previewsToUpdate.length>0)
@@ -347,7 +347,7 @@ export function parseDocument(document: TextDocument) {
 	if (document.languageId == "fountain")
 		outlineViewProvider.update();
 	updateStatus(output.lengthAction, output.lengthDialogue);
-	showDecorations(document.uri);
+	ShowDecorations(document.uri);
 
 	let t1 = performance.now()
 	let parseTime = t1-t0;

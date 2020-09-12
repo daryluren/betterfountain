@@ -3,7 +3,7 @@ import { token, create_token } from "./token";
 import { Range, Position } from "vscode";
 import { getFountainConfig } from "./configloader";
 import * as vscode from 'vscode';
-import { AddDialogueNumberDecoration } from "./providers/Decorations";
+import { AddDecoration } from "./providers/Decorations";
 
 
 //Unicode uppercase letters:
@@ -344,9 +344,11 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
             } else if (thistoken.text.match(regex.centered)) {
                 thistoken.type = "centered";
                 thistoken.text = thistoken.text.replace(/>|</g, "").trim();
+                AddDecoration(config, "centered", thistoken)
             } else if (thistoken.text.match(regex.transition)) {
                 thistoken.text = thistoken.text.replace(/> ?/, "");
                 thistoken.type = "transition";
+                AddDecoration(config, "transition", thistoken)
             } else if (match = thistoken.text.match(regex.synopsis)) {
                 thistoken.text = match[1];
                 thistoken.type = thistoken.text ? "synopsis" : "separator";
@@ -390,7 +392,7 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
                     state = "dialogue";
                     thistoken.type = "character";
                     thistoken.takeNumber = takeCount++;
-                    if(config.print_dialogue_numbers) AddDialogueNumberDecoration(thistoken)
+                    AddDecoration(config, "dialoguenumber", thistoken)
                     thistoken.text = thistoken.text.replace(/^@/, "");
                     if (thistoken.text[thistoken.text.length - 1] === "^") {
                         if (cfg.use_dual_dialogue) {
@@ -452,10 +454,12 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
         } else {
             if (thistoken.text.match(regex.parenthetical)) {
                 thistoken.type = "parenthetical";
+                AddDecoration(config, "parenthetical", thistoken)
             } else {
                 thistoken.type = "dialogue";
                 thistoken.time = calculateDialogueDuration(thistoken.text);
                 result.lengthDialogue += thistoken.time;
+                AddDecoration(config, "dialogue", thistoken);
             }
             if (dual_right) {
                 thistoken.dual = "right";
@@ -476,7 +480,7 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
             if (thistoken.text && thistoken.text[0] === "~") {
                 thistoken.text = "*" + thistoken.text.substr(1) + "*";
             }
-            if(thistoken.type != "action" && thistoken.type !=  "dialogue")
+            if(thistoken.type != "action" && thistoken.type != "dialogue")
                 thistoken.text = thistoken.text.trim();
             pushToken(thistoken);
         }

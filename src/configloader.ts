@@ -30,6 +30,7 @@ export class FountainConfig{
     synchronized_markup_and_preview:boolean;
     preview_theme:string;
     preview_texture:boolean;
+    wordWrapColumn:number;
 }
 
 export type FountainUIPersistence = {
@@ -87,6 +88,7 @@ export var getFountainConfig = function(docuri:vscode.Uri):FountainConfig{
         docuri = vscode.window.activeTextEditor.document.uri;
     var pdfConfig = vscode.workspace.getConfiguration("fountain.pdf", docuri);
     var generalConfig = vscode.workspace.getConfiguration("fountain.general", docuri);
+    var languageConfig = vscode.workspace.getConfiguration("[fountain]", docuri);
     return {
         number_scenes_on_save: generalConfig.numberScenesOnSave,
         embolden_scene_headers: pdfConfig.emboldenSceneHeaders,
@@ -114,6 +116,7 @@ export var getFountainConfig = function(docuri:vscode.Uri):FountainConfig{
         invisible_section_bookmarks: pdfConfig.invisibleSectionBookmarks,
         synchronized_markup_and_preview: generalConfig.synchronizedMarkupAndPreview,
         preview_theme: generalConfig.previewTheme,
-        preview_texture: generalConfig.previewTexture
+        preview_texture: generalConfig.previewTexture,
+        wordWrapColumn: (languageConfig && languageConfig["editor.wordWrapColumn"]) || 57
     }
 }

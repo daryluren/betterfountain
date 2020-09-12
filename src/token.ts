@@ -1,6 +1,7 @@
 export function create_token(text?: string, cursor?: number, line?: number, new_line_length?: number, type?:string){
     var t:token={
         text:text,
+        unformattedText:text,
         type:type,
         start:cursor,
         end:cursor,
@@ -74,4 +75,5 @@ export interface token {
     location:Function;
     has_scene_time:Function;
     location_type:Function;
+    unformattedText:string;
 }
