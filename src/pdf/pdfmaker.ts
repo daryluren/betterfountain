@@ -55,7 +55,7 @@ import { openFile, revealFile } from "../utils";
                         let open = "Open";
                         let reveal = "Reveal in File Explorer";
                         if(process.platform == "darwin") reveal = "Reveal in Finder"
-                        vscode.window.showInformationMessage("Exported PDF Succesfully!", open, reveal).then(val=>{
+                        vscode.window.showInformationMessage("Exported PDF Successfully!", open, reveal).then(val=>{
                             switch(val){
                                 case open:{
                                     openFile(simplestream.filepath);
