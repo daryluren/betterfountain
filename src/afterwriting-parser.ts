@@ -217,7 +217,7 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
         if (nested_comments && state !== "ignore") {
             cache_state_for_comment = state;
             state = "ignore";
-        } else if (state === "ignore") {
+        } else if (nested_comments === 0 && state === "ignore") {
             state = cache_state_for_comment;
         }
 
@@ -231,8 +231,10 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
 
 
         if (text.trim().length === 0 && text !== "  ") {
-            var skip_separator = cfg.merge_multiple_empty_lines && last_was_separator;
+            var skip_separator = cfg.merge_empty_lines && last_was_separator;
 
+            if (state == "ignore")
+                continue;
             if (state == "dialogue")
                 pushToken(create_token(undefined, undefined, undefined, undefined, "dialogue_end"));
             if (state == "dual_dialogue")
