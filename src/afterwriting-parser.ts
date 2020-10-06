@@ -171,15 +171,14 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
         last_character_index,
         dual_right,
         state = "normal",
-        cache_state_for_comment,
         nested_comments = 0,
         title_page_started = false
 
 
-    var reduce_comment = function (prev: any, current: any) {
+    var reduce_comment = function (prev: string, current: string) {
         if (current === "/*") {
             nested_comments++;
-        } else if (current === "*/") {
+        } else if (current === "*/" && nested_comments > 0) {
             nested_comments--;
         } else if (!nested_comments) {
             prev = prev + current;
@@ -214,31 +213,22 @@ export var parse = function (original_script: string, cfg: any, generate_html: b
         // replace inline comments
         text = text.split(/(\/\*){1}|(\*\/){1}|([^\/\*]+)/g).filter(if_not_empty).reduce(reduce_comment, "");
 
-        if (nested_comments && state !== "ignore") {
-            cache_state_for_comment = state;
-            state = "ignore";
-        } else if (nested_comments === 0 && state === "ignore") {
-            state = cache_state_for_comment;
-        }
-
-        if (nested_comments === 0 && state === "ignore") {
-            state = cache_state_for_comment;
-        }
-
-
         thistoken = create_token(text, current, i, new_line_length);
         current = thistoken.end + 1;
 
+        if (text.trim().length === 0 && nested_comments)
+            continue;
 
-        if (text.trim().length === 0 && text !== "  ") {
+        if (text.trim().length === 0 && !(text == "  " && state.endsWith("dialogue"))) {
             var skip_separator = cfg.merge_empty_lines && last_was_separator;
 
-            if (state == "ignore")
+            if (nested_comments)
                 continue;
-            if (state == "dialogue")
+            else if (state == "dialogue")
                 pushToken(create_token(undefined, undefined, undefined, undefined, "dialogue_end"));
-            if (state == "dual_dialogue")
+            else if (state == "dual_dialogue")
                 pushToken(create_token(undefined, undefined, undefined, undefined, "dual_dialogue_end"));
+            
             state = "normal";
 
 
