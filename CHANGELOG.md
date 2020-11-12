@@ -2,6 +2,24 @@
 
 **If you like BetterFountain, please consider [sponsoring me on GitHub](https://github.com/sponsors/piersdeseilligny). I spend a lot of energy on this project, and any contribution would mean the world to me**
 
+## **1.6.11** - *2020-11-08*
+    + Add "Parenthetical New Line Helper" setting - Disabling it will fix BetterFountain's compatibility with Vim emulators!
+    · Fix forced action (!Lines which start like this) being interpreted as a transition if they end with 'TO:' (Issue #92)
+    · Fix parsing, preview, and export of dialogue with forced line breaks (an 'empty' line with only two spaces)
+
+## **1.6.10** - *2020-10-23*
+    · Fixed inline notes replacing the entire action block
+    · Notes for sections now also appear as a description in the outline
+
+## **1.6.9** - *2020-10-22*
+    + "(MORE)" and "(CONT'D)" text can now be changed in the settings (Thanks @rnwzd for the PR!)
+    · Very minor adjustments to some descriptions in the PDF Settings
+
+## **1.6.8** - *2020-10-05*
+    + Add icons to outline
+    + Notes now show in the outline (toggle-able)
+    · Synopses now show in the correct order in the outline
+
 ## **1.6.7** - *2020-08-24*
     + Character extensions can now contain typesetters apostrophes (’) in addition to typewritters apostrophes (')
 
