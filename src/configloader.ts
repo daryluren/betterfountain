@@ -124,7 +124,7 @@ export var getFountainConfig = function(docuri:vscode.Uri):FountainConfig{
         synchronized_markup_and_preview: generalConfig.synchronizedMarkupAndPreview,
         preview_theme: generalConfig.previewTheme,
         preview_texture: generalConfig.previewTexture,
-        wordWrapColumn: (languageConfig && languageConfig["editor.wordWrapColumn"]) || 57
+        wordWrapColumn: (languageConfig && languageConfig["editor.wordWrapColumn"]) || 57,
         parenthetical_newline_helper:  generalConfig.parentheticalNewLineHelper
     }
 }
